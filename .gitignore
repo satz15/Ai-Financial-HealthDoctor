@@ -1,0 +1,24 @@
+# === ENVIRONMENT FILES ===
+.env
+
+# === PYTHON ===
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+
+# === VIRTUAL ENV ===
+venv/
+
+# === UPLOADS & TEMP ===
+uploads/
+*.log
+*.tmp
+
+# === EDITOR / SYSTEM ===
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

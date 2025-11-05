@@ -1,15 +1,20 @@
-AI Financial Health Doctor
-💡 Overview
+# 🩺 AI Financial Health Doctor
 
-AI Financial Health Doctor is an intelligent Python-based financial wellness assistant built using FastAPI.
-It acts like a personal health tracker — but for your finances.
-The app analyzes your income, debt, expenses, savings, and credit score, and gives a Financial Fitness Score with personalized recommendations.
+## 💡 Overview
+**AI Financial Health Doctor** is an intelligent Python-based financial wellness assistant built using **FastAPI**.  
+It acts like a *personal health tracker* — but for your finances.  
+The app analyzes your **income, debt, expenses, savings, and credit score**, and gives a **Financial Fitness Score** with personalized recommendations.
 
+---
+
+## ⚙️ Setup Instructions
+
+```bash
 # Clone the repository
-git clone https://github.com/satz15/Ai-Financial-HealthDoctor
+git clone https://github.com/satz15/Ai-Financial-HealthDoctor.git
 
 # Move into the project directory
-cd ai-financial-health-doctor
+cd Ai-Financial-HealthDoctor
 
 # Create a virtual environment
 python -m venv venv

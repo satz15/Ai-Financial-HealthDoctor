@@ -1,15 +1,15 @@
 Date,Description,Amount,Category
-2024-10-01,Salary,80000,Income
-2024-10-03,Rent,-20000,Expense
-2024-10-05,Groceries,-8500,Expense
-2024-10-07,Electricity Bill,-3000,Expense
-2024-10-10,Internet Bill,-1200,Expense
-2024-10-12,Freelance Income,10000,Income
-2024-10-15,Movie Tickets,-1200,Entertainment
-2024-10-17,Shopping,-5000,Expense
-2024-10-20,Investment,-10000,Investment
-2024-10-22,Restaurant,-1800,Food
-2024-10-25,Petrol,-2500,Expense
-2024-10-28,Phone Recharge,-400,Expense
-2024-10-29,Dividend,2000,Income
-2024-10-30,Gym Membership,-1500,Health
+01-10-2024,Salary,80000,Income
+03-10-2024,Rent,-20000,Expense
+05-10-2024,Groceries,-8500,Expense
+07-10-2024,Electricity Bill,-3000,Expense
+10-10-2024,Internet Bill,-1200,Expense
+12-10-2024,Freelance Income,10000,Income
+15-10-2024,Movie Tickets,-1200,Entertainment
+17-10-2024,Shopping,-5000,Expense
+20-10-2024,Investment,-10000,Investment
+22-10-2024,Restaurant,-1800,Food
+25-10-2024,Petrol,-2500,Expense
+28-10-2024,Phone Recharge,-400,Expense
+29-10-2024,Dividend,2000,Income
+30-10-2024,Gym Membership,-1500,Health

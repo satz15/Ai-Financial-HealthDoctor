@@ -4,8 +4,17 @@ from app.file_parser import parse_csv, parse_pdf
 from app.analysis import analyze_financial_statement
 from app.config import settings
 import os
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="AI Financial Health Doctor")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"], 
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 UPLOAD_FOLDER = settings.UPLOAD_FOLDER
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)

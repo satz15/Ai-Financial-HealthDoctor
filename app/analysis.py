@@ -112,43 +112,119 @@
 #     except Exception as e:
 #         return {"error": f"AI analysis unavailable ({e})"}
 
+# from groq import Groq
+# import os
+# import re
+# from dotenv import load_dotenv
+
+# # Load environment variables
+# load_dotenv()
+# client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+
+# # --- Utility Functions ---
+# def clean_text(text: str) -> str:
+#     """Clean markdown, symbols, and extra spaces."""
+#     if not text:
+#         return ""
+#     text = re.sub(r"[*#`_]+", "", text)
+#     return re.sub(r"\s+", " ", text).strip()
+
+# def split_to_list(text: str):
+#     """Split bullet or paragraph text into clean list format."""
+#     if not text:
+#         return []
+#     parts = [clean_text(p.strip("- ")) for p in text.split("\n") if p.strip()]
+#     if len(parts) == 1 and "." in parts[0]:
+#         parts = [s.strip() + "." for s in re.split(r"\.\s+", parts[0]) if s.strip()]
+#     return parts
+
+# # --- Core Financial Analysis ---
+# def analyze_financial_statement(summary):
+#     income = float(summary.get("total_income", 0))
+#     expenses = float(summary.get("total_expenses", 0))
+#     transactions = int(summary.get("transactions_count", 0))
+#     savings = max(income - expenses, 0)
+#     debt_ratio = round((expenses / income) * 100, 2) if income else 0.0
+#     savings_rate = round((savings / income) * 100, 2) if income else 0.0
+
+#     prompt = f"""
+#     You are a professional financial advisor.
+#     Analyze the user's financial data below:
+#     - Total Income: ₹{income}
+#     - Total Expenses: ₹{expenses}
+#     - Savings: ₹{savings}
+#     - Debt-to-Income Ratio: {debt_ratio}%
+#     - Savings Rate: {savings_rate}%
+#     - Transactions: {transactions}
+
+#     Create a structured financial report with these sections:
+#     ### Summary
+#     ### Strengths
+#     ### Areas to Improve
+#     ### Strategies
+#     ### Financial Fitness Score
+#     """
+
+#     res = client.chat.completions.create(
+#         model="llama-3.3-70b-versatile",
+#         messages=[
+#             {"role": "system", "content": "You are a structured, data-driven financial analyst."},
+#             {"role": "user", "content": prompt}
+#         ],
+#         temperature=0.7
+#     )
+
+#     raw = res.choices[0].message.content.strip()
+
+#     def extract(title):
+#         match = re.search(rf"### {title}\n([\s\S]*?)(?=\n###|\Z)", raw)
+#         return match.group(1).strip() if match else ""
+
+#     return {
+#         "Financial_Overview": {
+#             "Total Income (₹)": round(income, 2),
+#             "Total Expenses (₹)": round(expenses, 2),
+#             "Savings (₹)": round(savings, 2),
+#             "Debt-to-Income (%)": debt_ratio,
+#             "Savings Rate (%)": savings_rate
+#         },
+#         "AI_Financial_Analysis": {
+#             "Summary": split_to_list(extract("Summary")),
+#             "Strengths": split_to_list(extract("Strengths")),
+#             "Areas_to_Improve": split_to_list(extract("Areas to Improve")),
+#             "Strategies": clean_text(extract("Strategies")),
+#             "Financial_Fitness_Score": clean_text(extract("Financial Fitness Score"))
+#         }
+#     }
+
 from groq import Groq
 import os, re
-
 from dotenv import load_dotenv
+
 load_dotenv()
-
-
-print("🔍 Checking Groq API key...")
-key = os.getenv("GROQ_API_KEY")
-if not key:
-    print("❌ No API key found! Please restart your terminal or re-set it.")
-else:
-    print("✅ API Key loaded successfully!")
-
-try:
-    client = Groq(api_key=key)
-    models = client.models.list()
-    print("✅ Connection successful! Available models:")
-    for model in models.data[:5]:
-        print("-", model.id)
-except Exception as e:
-    print("❌ Error connecting to Groq:", e)
+client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 
 def clean_text(text: str) -> str:
-    if not text: return ""
+    """Clean markdown, symbols, and spacing."""
+    if not text:
+        return ""
     text = re.sub(r"[*#`_]+", "", text)
     return re.sub(r"\s+", " ", text).strip()
 
+
 def split_to_list(text: str):
-    if not text: return []
+    """Convert AI text into readable list format."""
+    if not text:
+        return []
     parts = [clean_text(p.strip("- ")) for p in text.split("\n") if p.strip()]
     if len(parts) == 1 and "." in parts[0]:
-        parts = [s.strip()+"." for s in re.split(r"\.\s+", parts[0]) if s.strip()]
+        parts = [s.strip() + "." for s in re.split(r"\.\s+", parts[0]) if s.strip()]
     return parts
 
-def analyze_financial_statement(summary):
+
+# def analyze_financial_statement(summary):
+    """Main AI-based financial analysis."""
     income = float(summary.get("total_income", 0))
     expenses = float(summary.get("total_expenses", 0))
     transactions = int(summary.get("transactions_count", 0))
@@ -158,26 +234,26 @@ def analyze_financial_statement(summary):
 
     prompt = f"""
     You are a professional financial advisor.
-    Below is the user's financial data:
-    - Total Income: ₹{income}
-    - Total Expenses: ₹{expenses}
+    Analyze the user's financial data:
+    - Income: ₹{income}
+    - Expenses: ₹{expenses}
     - Savings: ₹{savings}
     - Debt-to-Income Ratio: {debt_ratio}%
     - Savings Rate: {savings_rate}%
     - Transactions: {transactions}
 
-    Create a structured financial report:
-    ### Summary
+    Create a structured financial report with:
+    ### Summary (3–4 concise insights)
     ### Strengths
     ### Areas to Improve
     ### Strategies
-    ### Financial Fitness Score
+    ### Financial Fitness Score (1–10 with reason)
     """
 
     res = client.chat.completions.create(
         model="llama-3.3-70b-versatile",
         messages=[
-            {"role": "system", "content": "You are a structured, concise financial analyst."},
+            {"role": "system", "content": "You are a structured, data-driven financial analyst."},
             {"role": "user", "content": prompt}
         ],
         temperature=0.7
@@ -201,7 +277,92 @@ def analyze_financial_statement(summary):
             "Summary": split_to_list(extract("Summary")),
             "Strengths": split_to_list(extract("Strengths")),
             "Areas_to_Improve": split_to_list(extract("Areas to Improve")),
-            "Strategies": clean_text(extract("Strategies")),
+            "Strategies": split_to_list(extract("Strategies")),
             "Financial_Fitness_Score": clean_text(extract("Financial Fitness Score"))
         }
     }
+
+def analyze_financial_statement(summary):
+    """Enhanced AI-based financial analysis with investment and expense insights."""
+    income = float(summary.get("total_income", 0))
+    expenses = float(summary.get("total_expenses", 0))
+    transactions = int(summary.get("transactions_count", 0))
+    savings = max(income - expenses, 0)
+    debt_ratio = round((expenses / income) * 100, 2) if income else 0.0
+    savings_rate = round((savings / income) * 100, 2) if income else 0.0
+
+    # 🧠 Core financial context prompt
+    prompt = f"""
+    You are a professional Indian financial advisor.
+    Analyze this user's monthly data and provide specific, actionable insights.
+
+    Income: ₹{income}
+    Expenses: ₹{expenses}
+    Savings: ₹{savings}
+    Debt-to-Income Ratio: {debt_ratio}%
+    Savings Rate: {savings_rate}%
+    Transactions: {transactions}
+
+    Generate a structured, helpful financial report with:
+    ### Summary (3–4 concise insights)
+    ### Strengths
+    ### Areas to Improve
+    ### Strategies
+    ### Investment Recommendations (based on savings and risk profile)
+    ### Expense Optimization (how to reduce costs if expenses > income)
+    ### Financial Fitness Score (1–10 with reasoning)
+    """
+
+    try:
+        res = client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=[
+                {"role": "system", "content": "Be precise, use Indian financial context, use ₹ symbol."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.6
+        )
+        raw = res.choices[0].message.content.strip()
+
+        def extract(title):
+            match = re.search(rf"### {title}\n([\s\S]*?)(?=\n###|\Z)", raw)
+            return match.group(1).strip() if match else ""
+
+        return {
+            "Financial_Overview": {
+                "Total Income (₹)": round(income, 2),
+                "Total Expenses (₹)": round(expenses, 2),
+                "Savings (₹)": round(savings, 2),
+                "Debt-to-Income (%)": debt_ratio,
+                "Savings Rate (%)": savings_rate
+            },
+            "AI_Financial_Analysis": {
+                "Summary": split_to_list(extract("Summary")),
+                "Strengths": split_to_list(extract("Strengths")),
+                "Areas_to_Improve": split_to_list(extract("Areas to Improve")),
+                "Strategies": split_to_list(extract("Strategies")),
+                "Investment_Recommendations": split_to_list(extract("Investment Recommendations")),
+                "Expense_Optimization": split_to_list(extract("Expense Optimization")),
+                "Financial_Fitness_Score": clean_text(extract("Financial Fitness Score")),
+            }
+        }
+
+    except Exception as e:
+        return {
+            "Financial_Overview": {
+                "Total Income (₹)": round(income, 2),
+                "Total Expenses (₹)": round(expenses, 2),
+                "Savings (₹)": round(savings, 2),
+                "Debt-to-Income (%)": debt_ratio,
+                "Savings Rate (%)": savings_rate
+            },
+            "AI_Financial_Analysis": {
+                "Summary": ["Unable to fetch AI analysis."],
+                "Strengths": [],
+                "Areas_to_Improve": [],
+                "Strategies": [],
+                "Investment_Recommendations": [],
+                "Expense_Optimization": [],
+                "Financial_Fitness_Score": f"Error: {str(e)}"
+            }
+        }
